@@ -1,0 +1,68 @@
+ame: CI/CD - DevOps Assignment
+
+on:
+  push:
+    branches: [ main, master ]
+
+env:
+  DOCKERHUB_USERNAME: harishkumar0211
+  BACKEND_IMAGE: harishkumar0211/mean-backend:latest
+  FRONTEND_IMAGE: harishkumar0211/mean-frontend:latest
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.harishkumar0211 }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.BACKEND_IMAGE }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+           tags: ${{ env.FRONTEND_IMAGE }}
+
+  deploy-to-vm:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: SSH and deploy on remote VM
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.13.232.241.178 }}
+          username: ${{ secrets.Harish }}
+          key: ${{ secrets.devops-keys }}
+          port: 22
+          script: |
+            cd /home/ubuntu/app || mkdir -p /home/ubuntu/app && cd /home/ubuntu/app
+
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/${{ github.repository }} .
+            else
+              git pull
+            fi
+
+            sudo docker-compose pull
+            sudo docker-compose up -d
+
+

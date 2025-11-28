@@ -1,27 +1,31 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# DevOps Engineer Intern Assignment – MEAN Stack
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+## Overview
+This repository contains my solution for the DevOps Engineer Intern technical assignment.  
+The objective of this assignment was to containerize, orchestrate, and automate the deployment of a full-stack MEAN (MongoDB, Express, Angular, Node.js) application using DevOps best practices.
 
-## Project setup
+I mainly focused on Docker, Docker Compose, Nginx reverse proxy configuration, and CI/CD automation.
 
-### Node.js Server
+---
 
-cd backend
+## Tech Stack
+- MongoDB
+- Express.js (Node.js)
+- Angular
+- Docker
+- Docker Compose
+- Nginx (Reverse Proxy)
+- GitHub Actions (CI/CD)
+- Ubuntu Linux
 
-npm install
+---
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
-
-Run `node server.js`
-
-### Angular Client
-
-cd frontend
-
-npm install
-
-Run `ng serve --port 8081`
-
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
-
-Navigate to `http://localhost:8081/`
+## Project Structure
+```text
+backend/        -> Node.js + Express backend
+frontend/       -> Angular frontend
+nginx/          -> Nginx reverse proxy configuration
+docker-compose.yml
+.github/workflows/cicd.yml
+screenshots/
+README.md

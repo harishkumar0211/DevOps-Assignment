@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    image: harishkumar0211/mean-backend:latest
+    container_name: backend
+    restart: always
+    environment:
+      - PORT=3000
+      # connection string inside code already points to mongodb://mongo:27017/...
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  frontend:
+    image: harishkumar0211/mean-frontend:latest
+    container_name: frontend
+    restart: always
+    environment:
+      # If your Angular app needs API URL, we’ll wire it later if required
+      - API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    ports:
+      - "4200:4200"
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  mongo_data:
